@@ -17,6 +17,8 @@ def read(inputter, output):
 		print("Iterating")
 
 	for index, feature in enumerate(simple_map['features']):
+		name = feature['properties']['OA11CD']
+		new_map['features'][index]['properties'] = {'m':'OA11CD'}
 		try:
 			temp = data['O_'+feature['properties']['OA11CD']]
 			for year in temp.keys():

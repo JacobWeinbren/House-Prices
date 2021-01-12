@@ -1,6 +1,5 @@
 year = '20'
 view = 'buildings'
-mapboxgl.accessToken = 'pk.eyJ1IjoiZWRtaWxpYmFuZCIsImEiOiJja2pweWsxZmE3YXJ6MnJsZzM5M2EyYm56In0.qLzLmOafH0vucvXSMWo9Kg';
 
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -14,6 +13,8 @@ function shorttolong() {
         return '20' + year
     }
 }
+
+mapboxgl.accessToken = 'pk.eyJ1IjoiZWRtaWxpYmFuZCIsImEiOiJja2pweWsxZmE3YXJ6MnJsZzM5M2EyYm56In0.qLzLmOafH0vucvXSMWo9Kg';
 
 map = new mapboxgl.Map({
     container: 'map',
@@ -43,14 +44,6 @@ $.getJSON('twenty.json', function(data) {
         .domain(twenty)
         .range(col_range.reverse());
 
-    heights = d3.scaleQuantile()
-        .domain(twenty)
-        .range(d3.range(1000, 100000));
-
-    unique = twenty.filter((item, i, ar) => ar.indexOf(item) === i);
-
-    unique = unique.sort((a, b) => a - b);
-
     var quan = colours.quantiles()
     quan = quan.filter((e, i) => i % 2 == 0)
     quan.unshift(0)
@@ -68,22 +61,24 @@ $.getJSON('twenty.json', function(data) {
 
 //Get colour scheme for 2D Maps
 function generatePaint() {
-    var paint = {
+    paint = {
         'fill-color': [
             'case',
             ['==', ['has', year], true],
             ['interpolate-hcl', ['linear'],
-                ['get', 'y_' + year]
+                ['get', year]
             ],
             ["rgba", 191, 191, 191, 0.1]
         ]
     }
 
-    var fill = [
+    fill = [
         'case',
         ['==', ['has', year], true],
         ['interpolate', ['linear'],
-            ['get', 'y_' + year],
+            ['get', year],
+            0, 0,
+            400, 80000
         ],
         0
     ]
@@ -98,22 +93,12 @@ function generatePaint() {
         paint['fill-color'][2].push(colour)
     }
 
-    for (var i = 0; i < unique.length; i++) {
-        var tick = unique[i]
-        var height = heights(tick)
-        fill[2].push(parseInt(tick))
-        fill[2].push(height)
-    }
-
-    console.log(fill)
-
-    return { fill, paint };
 }
 
 //Initial paint of maps
 map.on('load', function() {
 
-    var { fill, paint } = generatePaint()
+    generatePaint()
 
     map.addLayer({
             "id": "buildings",
@@ -123,7 +108,7 @@ map.on('load', function() {
                 "tiles": ["http://206.189.22.89:8080/data/intersect/{z}/{x}/{y}.pbf"],
             },
             'layout': {
-                'visibility': 'none'
+                'visibility': 'visible'
             },
             "source-layer": "intersect_data",
             'paint': paint
@@ -138,19 +123,20 @@ map.on('load', function() {
                 "tiles": ["http://206.189.22.89:8080/data/oa/{z}/{x}/{y}.pbf"],
             },
             'layout': {
-                'visibility': 'none'
+                'visibility': 'visible'
             },
             "source-layer": "oa",
             'paint': paint
         },
         'waterway-label');
 
+    /*
     map.addSource('hexes', {
         'type': 'geojson',
         'data': 'hexes.geojson'
     });
     map.addLayer({
-        'id': 'hexes-extrusion',
+        'id': 'hex_map',
         'type': 'fill-extrusion',
         'source': 'hexes',
         'paint': {
@@ -158,6 +144,25 @@ map.on('load', function() {
             'fill-extrusion-height': fill,
             'fill-extrusion-base': 0,
             'fill-extrusion-opacity': 1
+        },
+        'layout': {
+            'visibility': 'none'
+        },
+    });*/
+
+    $('#mode-select').click(function() {
+        if (view == 'msoa') {
+            change('buildings')
+        } else {
+            change('msoa')
+        }
+    });
+
+    $('#fill-select').click(function() {
+        if (view == 'areas') {
+            change('buildings')
+        } else {
+            change('areas')
         }
     });
 });
@@ -171,6 +176,7 @@ function change(value) {
             move('2d')
             map.setLayoutProperty('buildings', 'visibility', 'visible')
             map.setLayoutProperty('areas', 'visibility', 'none')
+            map.setLayoutProperty('hex_map', 'visibility', 'none')
             map.setPaintProperty(
                 'buildings',
                 'fill-color',
@@ -182,6 +188,7 @@ function change(value) {
             move('2d')
             map.setLayoutProperty('buildings', 'visibility', 'none')
             map.setLayoutProperty('areas', 'visibility', 'visible')
+            map.setLayoutProperty('hex_map', 'visibility', 'none')
             map.setPaintProperty(
                 'areas',
                 'fill-color',
@@ -193,6 +200,17 @@ function change(value) {
             move('3d')
             map.setLayoutProperty('buildings', 'visibility', 'none')
             map.setLayoutProperty('areas', 'visibility', 'none')
+            map.setLayoutProperty('hex_map', 'visibility', 'visible')
+            map.setPaintProperty(
+                'hex_map',
+                'fill-color',
+                paint['fill-color']
+            );
+            map.setPaintProperty(
+                'hex_map',
+                'fill-extrusion-height',
+                fill
+            );
         }
     }
 }
@@ -233,21 +251,5 @@ $(document).ready(function() {
     $(".mode").appendTo(".mapboxgl-ctrl-top-left");
     $(".choices").prependTo(".mapboxgl-ctrl-bottom-left");
     $("#info").insertBefore(".mapboxgl-ctrl-attrib");
-
-    $('#mode-select').click(function() {
-        if (view == 'msoa') {
-            change('buildings')
-        } else {
-            change('msoa')
-        }
-    });
-
-    $('#fill-select').click(function() {
-        if (view == 'areas') {
-            change('buildings')
-        } else {
-            change('areas')
-        }
-    });
 
 });

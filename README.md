@@ -29,9 +29,9 @@ By Tyron and Jacob
 
 8. Run these commands
 
-    tippecanoe --output=oa.mbtiles --coalesce-smallest-as-needed --coalesce-densest-as-needed --coalesce-fraction-as-needed --simplify-only-low-zooms --no-feature-limit --no-tile-size-limit --detect-shared-borders --include=OA11CD oa.geojson
+    tippecanoe --output=oa.mbtiles --coalesce-smallest-as-needed --coalesce-densest-as-needed --coalesce-fraction-as-needed --simplify-only-low-zooms --no-feature-limit --no-tile-size-limit --detect-shared-borders oa.geojson
     
-    tippecanoe --output=intersect.mbtiles --coalesce-smallest-as-needed --coalesce-densest-as-needed --coalesce-fraction-as-needed --simplify-only-low-zooms --no-feature-limit --no-tile-size-limit --detect-shared-borders --include=OA11CD intersect.geojson
+    tippecanoe --output=intersect.mbtiles --coalesce-smallest-as-needed --coalesce-densest-as-needed --coalesce-fraction-as-needed --simplify-only-low-zooms --no-feature-limit --no-tile-size-limit --detect-shared-borders intersect.geojson
 
 9. Run these commands on backend
 
