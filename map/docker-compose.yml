@@ -1,0 +1,9 @@
+version: '3.4'
+services:
+    openmaptiles:
+        image: klokantech/tileserver-gl
+        ports:
+            - 8080:80
+        volumes:
+            - "./data:/data"
+        command: "--verbose -c config.json"

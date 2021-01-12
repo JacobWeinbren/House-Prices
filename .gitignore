@@ -1,0 +1,15 @@
+/map/intersect.geojson
+/map/intersect.mbtiles
+/map/oa.mbtiles
+/map/oa.geojson
+/data/Maps/Intersect/intersect.geojson
+/data/Maps/Intersect/Intersect.shp
+/data/Maps/Intersect/Intersect.dbf
+/data/Maps/NewMap/NewMap.gdb/a00000021.gdbtable
+/data/Maps/NewMap/NewMap.gdb/a00000022.gdbtable
+/data/Maps/OA/oa.geojson
+/data/convert.csv
+/data/data.json
+/data/pricing.csv
+/data/postcodes.csv
+.DS_Store

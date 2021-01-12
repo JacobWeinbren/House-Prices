@@ -1,0 +1,107 @@
+/* Lays out main body elements */
+body {
+    margin: 0;
+    padding: 0;
+}
+
+#map {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Defines control elements */
+.custom {
+    float: left;
+    clear: both;
+    pointer-events: auto;
+    background-color: white;
+    border-radius: 4px;
+}
+
+/* Defines control buttons */
+.mode {
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+    margin: 10px 0 0 10px;
+}
+
+.active {
+    color: white;
+}
+
+.mode.active {
+    background-color: #448ee4;
+}
+
+
+.mode button {
+    width: 29px;
+    height: 29px;
+}
+
+.mode button .icon {
+    width: 1.5em;
+    height: 1.5em;
+}
+
+.mode button {
+    display: block;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
+
+.mode:hover {
+    filter: brightness(95%);
+}
+
+/* Establishes Legend */
+
+.legend .grid.vals .col {
+    height: 25px;
+}
+
+.legend .grid.vals .col:first-child {
+    border-radius: 4px 0 0 4px;
+}
+
+.legend .grid.vals .col:last-child {
+    border-radius: 0 4px 4px 0;
+}
+
+.legend {
+    font-size: 15px;
+    width: 120px;
+    float: right;
+    margin: 0 0 10px 10px;
+    color: white;
+    user-select: none;
+    background-color: rgba(0, 0, 0, 0);
+    backdrop-filter: blur(20px);
+    padding: 5px;
+
+}
+
+/* Row Centers, container has grid */
+.row {
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    width: 30px;
+}
+
+.container .align-left p {
+    margin-left: 10px;
+}
+
+.title {
+    text-align: center;
+}

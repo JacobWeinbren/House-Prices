@@ -1,0 +1,36 @@
+{
+    "options":
+    {
+        "paths":
+        {
+            "root": "/usr/src/app/node_modules/tileserver-gl-styles",
+            "fonts": "fonts",
+            "styles": "styles",
+            "mbtiles": "/data"
+        }
+    },
+    "sources":
+    {
+        "oa":
+        {
+            "url": "mbtiles://{oa}",
+            "type": "vector"
+        },
+        "intersect":
+        {
+            "url": "mbtiles://{intersect}",
+            "type": "vector"
+        }
+    },
+    "data":
+    {
+        "oa":
+        {
+            "mbtiles": "oa.mbtiles"
+        },
+        "intersect":
+        {
+            "mbtiles": "intersect.mbtiles"
+        }
+    }
+}
