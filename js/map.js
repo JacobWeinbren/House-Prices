@@ -14,8 +14,6 @@ function shorttolong() {
     }
 }
 
-mapboxgl.accessToken = 'pk.eyJ1IjoiZWRtaWxpYmFuZCIsImEiOiJja2pweWsxZmE3YXJ6MnJsZzM5M2EyYm56In0.qLzLmOafH0vucvXSMWo9Kg';
-
 map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/dark-v10',
