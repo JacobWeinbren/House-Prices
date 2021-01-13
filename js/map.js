@@ -115,7 +115,7 @@ map.on('load', function() {
             "type": "fill",
             "source": {
                 "type": "vector",
-                "tiles": ["http://206.189.22.89:8080/data/intersect/{z}/{x}/{y}.pbf"],
+                "tiles": ["https://www.mapservertsr.xyz/data/intersect/{z}/{x}/{y}.pbf"],
             },
             "source-layer": "intersect",
             'paint': paint
@@ -127,7 +127,7 @@ map.on('load', function() {
             "type": "fill",
             "source": {
                 "type": "vector",
-                "tiles": ["http://206.189.22.89:8080/data/oa/{z}/{x}/{y}.pbf"],
+                "tiles": ["https://www.mapservertsr.xyz/data/oa/{z}/{x}/{y}.pbf"],
             },
             "source-layer": "oa",
             'paint': paint
