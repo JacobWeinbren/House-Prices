@@ -1,7 +1,7 @@
 **TSR Housing Map**
 By Tyron and Jacob
 
- 1. Step 1 / Download Files
+ 1. Download Files
  
 | File | Link |  Location |
 |--|--|--|

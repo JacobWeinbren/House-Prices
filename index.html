@@ -9,11 +9,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/6.3.1/d3.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.js"></script>
+    <script src="https://unpkg.com/custom-range@1/range.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mapbox/assembly@0.25.0/dist/assembly.js"></script>
     <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.min.js"></script>
     <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.css" type="text/css" />
     <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.css" type="text/css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mapbox/assembly@0.25.0/dist/assembly.css" rel="stylesheet">
+    <link rel=stylesheet href="https://unpkg.com/custom-range@1/range.css" />
     <link rel='stylesheet' href='css/style.css' />
 </head>
 
@@ -35,12 +37,24 @@
                 </button>
             </div>
             <div class='legend custom round'>
-                <div class='block mb12 title'></strong>
+                <div class='block title'>House Prices as a Multiple of Salary
                 </div>
                 <div class="row">
                     <div class='container'></div>
                 </div>
             </div>
+            <div class='timeline custom flex-parent flex-parent--row flex-parent--center-cross'>
+                <button class='main flex-child py18 pr12 pl18 border-r border--gray-light bg-white round-l bg-blue-faint-on-hover'>
+                    <div class='control'></div>
+                </button>
+                <x-range class='draggable round-full' min=1995 max=2020 step=1 value=1995></x-range>
+                <div class="year">
+                    <b>1995</b>
+                </div>
+            </div>
+            <p id='val'>
+                1234
+            </p>
         </div>
         <script src="js/map.js"></script>
     </body>

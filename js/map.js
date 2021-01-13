@@ -1,5 +1,15 @@
-year = '20'
+year = '95'
 view = 'buildings'
+paint = {}
+fill = {}
+
+/*
+$('#map').hide();
+response = prompt("Hello and welcome to the map demo. To enter you must answer the following question. What is Jacob's favourite animal?");
+if (response == 'turtle' || response == 'Turtle') {
+    $('#map').show();
+    alert("Well done. Sadly I do not have a prize to give");
+}*/
 
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -22,16 +32,11 @@ map = new mapboxgl.Map({
     center: [-2.3278, 52.8379],
     zoom: 6,
     maxZoom: 14,
-    attributionControl: false
+    attributionControl: false,
+    antialias: true,
 }).addControl(new mapboxgl.AttributionControl({
     customAttribution: '<a href="https://www.thesocialreview.co.uk/">TSR</a>'
 }));
-
-LIGHT_SETTINGS = {
-    ambientRatio: 1,
-    diffuseRatio: 1,
-    specularRatio: 1,
-};
 
 $.getJSON('twenty.json', function(data) {
     //Data domain
@@ -48,12 +53,15 @@ $.getJSON('twenty.json', function(data) {
     quan = quan.filter((e, i) => i % 2 == 0)
     quan.unshift(0)
 
+    compare = []
+
     for (var i = 0; i < quan.length; i++) {
         var tick = quan[i]
+        compare.push(tick)
         var colour = colours(tick)
-        $('.row .container').append($("<div class='grid'></div")
-            .append($("<div class='col col--6'></div>").css('background-color', colour))
-            .append($("<div class='col col--6 align-left'></div>").html('<p>' + tick + '+</p>'))
+        $('.row .container').append($("<div class='box'></div")
+            .append($("<div class='text'></div>").html('<p>' + tick + '+</p>'))
+            .append($("<div class='colour'></div>").css('background-color', colour))
         )
     }
 });
@@ -78,7 +86,9 @@ function generatePaint() {
         ['interpolate', ['linear'],
             ['get', year],
             0, 0,
-            400, 80000
+            70, 10000,
+            100, 20000,
+            2000, 30000
         ],
         0
     ]
@@ -107,10 +117,7 @@ map.on('load', function() {
                 "type": "vector",
                 "tiles": ["http://206.189.22.89:8080/data/intersect/{z}/{x}/{y}.pbf"],
             },
-            'layout': {
-                'visibility': 'visible'
-            },
-            "source-layer": "intersect_data",
+            "source-layer": "intersect",
             'paint': paint
         },
         'waterway-label');
@@ -122,35 +129,48 @@ map.on('load', function() {
                 "type": "vector",
                 "tiles": ["http://206.189.22.89:8080/data/oa/{z}/{x}/{y}.pbf"],
             },
-            'layout': {
-                'visibility': 'visible'
-            },
             "source-layer": "oa",
             'paint': paint
         },
         'waterway-label');
 
-    /*
-    map.addSource('hexes', {
+    map.setPaintProperty(
+        'areas',
+        'fill-opacity',
+        0
+    );
+
+    map.addSource('hex_source', {
         'type': 'geojson',
         'data': 'hexes.geojson'
     });
+
     map.addLayer({
-        'id': 'hex_map',
-        'type': 'fill-extrusion',
-        'source': 'hexes',
-        'paint': {
-            'fill-extrusion-color': paint['fill-color'],
-            'fill-extrusion-height': fill,
-            'fill-extrusion-base': 0,
-            'fill-extrusion-opacity': 1
+            'id': 'msoa',
+            'type': 'fill-extrusion',
+            'source': 'hex_source',
+            "renderingMode": "3d",
+            'paint': {
+                'fill-extrusion-color': paint['fill-color'],
+                'fill-extrusion-height': fill,
+                'fill-extrusion-base': 0,
+                'fill-extrusion-opacity': 1
+            },
+            'layout': {
+                'visibility': 'none'
+            }
         },
-        'layout': {
-            'visibility': 'none'
-        },
-    });*/
+        'waterway-label');
+
+    map.setLight({
+        "anchor": "viewport",
+        "color": "white",
+        "intensity": 0.4
+    });
 
     $('#mode-select').click(function() {
+        $('#mode-select').toggleClass('active');
+        $('#fill-select').removeClass('active');
         if (view == 'msoa') {
             change('buildings')
         } else {
@@ -159,10 +179,29 @@ map.on('load', function() {
     });
 
     $('#fill-select').click(function() {
+        $('#fill-select').toggleClass('active');
+        $('#mode-select').removeClass('active');
         if (view == 'areas') {
             change('buildings')
         } else {
             change('areas')
+        }
+    });
+
+    $('.main').click(function() {
+        $('.control').toggleClass('pause')
+        if ($('.control').hasClass('pause')) {
+            timer = setInterval(function() {
+                y = parseInt(shorttolong()) + 1
+                if (y > 2020) {
+                    y = 1995
+                }
+                $('.draggable').val(y)
+                y = y.toString().slice(-2)
+                changeyear(y)
+            }, 2000);
+        } else {
+            clearInterval(timer);
         }
     });
 });
@@ -171,48 +210,63 @@ map.on('load', function() {
 function change(value) {
     if (value != view) {
         view = value;
-        $('.mode').removeClass('active');
         if (value == "buildings") {
             move('2d')
             map.setLayoutProperty('buildings', 'visibility', 'visible')
-            map.setLayoutProperty('areas', 'visibility', 'none')
-            map.setLayoutProperty('hex_map', 'visibility', 'none')
+            map.setLayoutProperty('areas', 'visibility', 'visible')
+            map.setLayoutProperty('msoa', 'visibility', 'none')
             map.setPaintProperty(
-                'buildings',
-                'fill-color',
-                paint['fill-color']
+                'areas',
+                'fill-opacity',
+                0
             );
         }
         if (value == "areas") {
-            $('#fill-select').addClass('active');
             move('2d')
             map.setLayoutProperty('buildings', 'visibility', 'none')
             map.setLayoutProperty('areas', 'visibility', 'visible')
-            map.setLayoutProperty('hex_map', 'visibility', 'none')
+            map.setLayoutProperty('msoa', 'visibility', 'none')
             map.setPaintProperty(
                 'areas',
-                'fill-color',
-                paint['fill-color']
+                'fill-opacity',
+                1
             );
         }
         if (value == "msoa") {
-            $('#mode-select').addClass('active');
             move('3d')
             map.setLayoutProperty('buildings', 'visibility', 'none')
             map.setLayoutProperty('areas', 'visibility', 'none')
-            map.setLayoutProperty('hex_map', 'visibility', 'visible')
-            map.setPaintProperty(
-                'hex_map',
-                'fill-color',
-                paint['fill-color']
-            );
-            map.setPaintProperty(
-                'hex_map',
-                'fill-extrusion-height',
-                fill
-            );
+            map.setLayoutProperty('msoa', 'visibility', 'visible')
         }
     }
+}
+
+//Updates year
+function changeyear(y) {
+    year = y;
+    $('.year b').text(shorttolong().toString())
+    generatePaint()
+
+    map.setPaintProperty(
+        'msoa',
+        'fill-extrusion-color',
+        paint['fill-color']
+    );
+    map.setPaintProperty(
+        'msoa',
+        'fill-extrusion-height',
+        fill
+    );
+    map.setPaintProperty(
+        'areas',
+        'fill-color',
+        paint['fill-color']
+    );
+    map.setPaintProperty(
+        'buildings',
+        'fill-color',
+        paint['fill-color']
+    );
 }
 
 //Angle change
@@ -221,13 +275,13 @@ function move(type) {
         map.easeTo({
             bearing: 0,
             pitch: 0,
-            duration: 2000
+            duration: 2000,
         });
     } else {
         map.easeTo({
             bearing: -27,
             pitch: 60,
-            duration: 2000
+            duration: 2000,
         });
     }
 }
@@ -245,11 +299,16 @@ map.addControl(new mapboxgl.NavigationControl(), 'top-left');
 
 $(document).ready(function() {
 
-    $('.title').text('House Prices as a Multiple of Salary (' + shorttolong() + ')')
-
-    $(".legend").prependTo(".mapboxgl-ctrl-bottom-right");
     $(".mode").appendTo(".mapboxgl-ctrl-top-left");
-    $(".choices").prependTo(".mapboxgl-ctrl-bottom-left");
-    $("#info").insertBefore(".mapboxgl-ctrl-attrib");
+    $(".timeline").prependTo(".mapboxgl-ctrl-bottom-left");
+    $(".legend").prependTo(".mapboxgl-ctrl-bottom-left");
+
+    $('.draggable').on('change', function() {
+        changeyear($(this).val().toString().slice(-2));
+    });
+
+    $('.draggable').on('input', function() {
+        $('.year b').text($(this).val().toString())
+    });
 
 });

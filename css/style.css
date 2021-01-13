@@ -18,11 +18,11 @@ body {
     pointer-events: auto;
     background-color: white;
     border-radius: 4px;
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
 }
 
 /* Defines control buttons */
 .mode {
-    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
     margin: 10px 0 0 10px;
 }
 
@@ -60,48 +60,95 @@ body {
 
 /* Establishes Legend */
 
-.legend .grid.vals .col {
-    height: 25px;
+.box {
+    margin: 0 auto;
+    width: 60px;
+    height: 30px;
+    display: flex;
+    flex-grow: 0;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
-.legend .grid.vals .col:first-child {
-    border-radius: 4px 0 0 4px;
+.text {
+    width: 50px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
 }
 
-.legend .grid.vals .col:last-child {
-    border-radius: 0 4px 4px 0;
+.colour {
+    width: 25px;
+    height: 100%;
 }
 
 .legend {
     font-size: 15px;
-    width: 120px;
-    float: right;
+    width: 100px;
+    float: left;
     margin: 0 0 10px 10px;
-    color: white;
     user-select: none;
-    background-color: rgba(0, 0, 0, 0);
-    backdrop-filter: blur(20px);
+    background-color: white;
+}
+
+.legend>div {
     padding: 5px;
-
-}
-
-/* Row Centers, container has grid */
-.row {
-    width: auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.container {
-    width: 30px;
-}
-
-.container .align-left p {
-    margin-left: 10px;
 }
 
 .title {
     text-align: center;
+    border-bottom: 1px solid #ccc;
+}
+
+/* Time Control */
+.timeline {
+    border-radius: 4px;
+    margin: 0 0 10px 10px;
+    min-width: 300px;
+    max-width: 500px;
+    width: 40vw;
+    height: 55px;
+}
+
+.bar {
+    border-radius: 0 4px 4px 0;
+}
+
+.draggable {
+    margin: 5px;
+    margin-left: 10px;
+    width: 100%;
+    cursor: ew-resize !important;
+    --track-color: transparent;
+    --elapsed-color: #00b1ff;
+    --thumb-color: white;
+}
+
+.year {
+    font-size: 15px;
+    float: right;
+    margin: 5px;
+    margin-right: 10px;
+}
+
+.control {
+    box-sizing: border-box;
+    height: 18.5px;
+
+    border-color: transparent transparent transparent #448ee4;
+    transition: 100ms all ease;
+    will-change: border-width;
+    cursor: pointer;
+
+    border-style: solid;
+    border-width: 9.25px 0 9.25px 15px;
+}
+
+.control.pause {
+    border-style: double;
+    height: 17px;
+    border-width: 0px 0 0px 15px;
 }

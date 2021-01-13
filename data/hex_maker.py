@@ -17,7 +17,7 @@ for index, hex_item in enumerate(hexes):
 	coords = hex_item['geometry']['coordinates']
 	name = hex_item['properties']['msoa11cd']
 
-	h3_address = h3.geo_to_h3(coords[0], coords[1], 7)
+	h3_address = h3.geo_to_h3(coords[0], coords[1], 8)
 	hex_boundary = h3.h3_to_geo_boundary(h3_address)
 	p = Polygon(hex_boundary)
 
