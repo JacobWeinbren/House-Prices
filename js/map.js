@@ -84,15 +84,14 @@ $.getJSON('twenty.json', function(data) {
             },
             'waterway-label');
 
-        map.addSource('hex_source', {
-            'type': 'geojson',
-            'data': 'hexes.geojson'
-        });
-
         map.addLayer({
                 'id': 'msoa',
                 'type': 'fill-extrusion',
-                'source': 'hex_source',
+                "source": {
+                    "type": "vector",
+                    "tiles": ["https://www.mapservertsr.xyz/data/hexes/{z}/{x}/{y}.pbf"],
+                },
+                "source-layer": "hexes",
                 "renderingMode": "3d",
                 'paint': {
                     'fill-extrusion-color': paint['fill-color'],

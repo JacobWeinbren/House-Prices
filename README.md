@@ -33,6 +33,8 @@ By Tyron and Jacob
     
     tippecanoe --output=intersect.mbtiles --coalesce-smallest-as-needed --coalesce-densest-as-needed --coalesce-fraction-as-needed --simplify-only-low-zooms --no-feature-limit --no-tile-size-limit --detect-shared-borders intersect.geojson
 
+    tippecanoe --output=hexes.mbtiles --coalesce-smallest-as-needed --coalesce-densest-as-needed --coalesce-fraction-as-needed --simplify-only-low-zooms --no-feature-limit --no-tile-size-limit --detect-shared-borders hexes.geojson
+
 9. Run these commands on backend
 
     ssh root@206.189.22.89  

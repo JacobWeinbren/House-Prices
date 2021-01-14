@@ -37,7 +37,7 @@ for index, hex_item in enumerate(hexes):
 
 feature_collection = FeatureCollection(features)
 
-with open('../hexes.geojson', 'w') as f:
+with open('../map/hexes.geojson', 'w') as f:
 	features = ujson.loads(dumps(feature_collection))
 	ujson.dump(features, f)
 

@@ -20,6 +20,11 @@
         {
             "url": "mbtiles://{intersect}",
             "type": "vector"
+        },
+        "hexes":
+        {
+            "url": "mbtiles://{hexes}",
+            "type": "vector"
         }
     },
     "data":
@@ -31,6 +36,10 @@
         "intersect":
         {
             "mbtiles": "intersect.mbtiles"
+        },
+        "hexes":
+        {
+            "mbtiles": "hexes.mbtiles"
         }
     }
 }
