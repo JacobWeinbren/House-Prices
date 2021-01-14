@@ -90,15 +90,12 @@ $.getJSON('twenty.json', function(data) {
                     "tiles": ["https://www.mapservertsr.xyz/data/oa/{z}/{x}/{y}.pbf"],
                 },
                 "source-layer": "oa",
-                'paint': paint
+                'paint': paint,
+                'layout': {
+                    'visibility': 'none'
+                }
             },
             'waterway-label');
-
-        map.setPaintProperty(
-            'areas',
-            'fill-opacity',
-            0
-        );
 
         map.addSource('hex_source', {
             'type': 'geojson',
