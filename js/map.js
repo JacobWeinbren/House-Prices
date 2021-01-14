@@ -33,7 +33,7 @@ $.getJSON('twenty.json', function(data) {
     var twenty = data['20'];
 
     //Blue and Red 10
-    var col_range = ["#9e0142", "#d53e4f", "#f46d43", "#fdae61", "#fee08b", "#e6f598", "#abdda4", "#66c2a5", "#3288bd", "#5e4fa2"];
+    var col_range = ["#a50026", "#d73027", "#f46d43", "#fdae61", "#fee090", "#e0f3f8", "#abd9e9", "#74add1", "#4575b4", "#313695"];
 
     colours = d3.scaleQuantile()
         .domain(twenty)
