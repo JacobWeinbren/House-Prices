@@ -148,17 +148,22 @@ $.getJSON('twenty.json', function(data) {
             }
         });
 
+        function progress() {
+            y = parseInt(shorttolong()) + 1
+            if (y > 2020) {
+                y = 1995
+            }
+            $('.draggable').val(y)
+            y = y.toString().slice(-2)
+            changeyear(y)
+        }
+
         $('.main').click(function() {
             $('.control').toggleClass('pause')
             if ($('.control').hasClass('pause')) {
+                progress();
                 timer = setInterval(function() {
-                    y = parseInt(shorttolong()) + 1
-                    if (y > 2020) {
-                        y = 1995
-                    }
-                    $('.draggable').val(y)
-                    y = y.toString().slice(-2)
-                    changeyear(y)
+                    progress();
                 }, 2000);
             } else {
                 clearInterval(timer);
