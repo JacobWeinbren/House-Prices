@@ -1,26 +1,16 @@
-year = '95'
-view = 'buildings'
-paint = {}
-fill = {}
-
-/*
-$('#map').hide();
-response = prompt("Hello and welcome to the map demo. To enter you must answer the following question. What is Jacob's favourite animal?");
-if (response == 'turtle' || response == 'Turtle') {
-    $('#map').show();
-    alert("Well done. Sadly I do not have a prize to give");
-}*/
+year = '95';
+view = 'buildings';
 
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 function shorttolong() {
-    var temp = parseInt(year)
+    var temp = parseInt(year);
     if (temp > 50) {
-        return '19' + year
+        return '19' + year;
     } else {
-        return '20' + year
+        return '20' + year;
     }
 }
 
@@ -40,29 +30,26 @@ map = new mapboxgl.Map({
 
 $.getJSON('twenty.json', function(data) {
     //Data domain
-    var twenty = data['20']
+    var twenty = data['20'];
 
     //Blue and Red 10
-    var col_range = ["#9e0142", "#d53e4f", "#f46d43", "#fdae61", "#fee08b", "#e6f598", "#abdda4", "#66c2a5", "#3288bd", "#5e4fa2"]
+    var col_range = ["#9e0142", "#d53e4f", "#f46d43", "#fdae61", "#fee08b", "#e6f598", "#abdda4", "#66c2a5", "#3288bd", "#5e4fa2"];
 
     colours = d3.scaleQuantile()
         .domain(twenty)
         .range(col_range.reverse());
 
-    var quan = colours.quantiles()
-    quan = quan.filter((e, i) => i % 2 == 0)
-    quan.unshift(0)
-
-    compare = []
+    var quan = colours.quantiles();
+    quan = quan.filter((e, i) => i % 2 == 0);
+    quan.unshift(0);
 
     for (var i = 0; i < quan.length; i++) {
-        var tick = quan[i]
-        compare.push(tick)
+        var tick = quan[i];
         var colour = colours(tick)
         $('.row .container').append($("<div class='box'></div")
             .append($("<div class='text'></div>").html('<p>' + tick + '+</p>'))
             .append($("<div class='colour'></div>").css('background-color', colour))
-        )
+        );
     }
 
     //Initial paint of maps
@@ -123,15 +110,15 @@ $.getJSON('twenty.json', function(data) {
             "anchor": "viewport",
             "color": "white",
             "intensity": 0.4
-        });
+        });;
 
         $('#mode-select').click(function() {
             $('#mode-select').toggleClass('active');
             $('#fill-select').removeClass('active');
             if (view == 'msoa') {
-                change('buildings')
+                change('buildings');
             } else {
-                change('msoa')
+                change('msoa');
             }
         });
 
@@ -139,24 +126,24 @@ $.getJSON('twenty.json', function(data) {
             $('#fill-select').toggleClass('active');
             $('#mode-select').removeClass('active');
             if (view == 'areas') {
-                change('buildings')
+                change('buildings');
             } else {
-                change('areas')
+                change('areas');
             }
         });
 
         function progress() {
-            y = parseInt(shorttolong()) + 1
+            y = parseInt(shorttolong()) + 1;
             if (y > 2020) {
-                y = 1995
+                y = 1995;
             }
-            $('.draggable').val(y)
-            y = y.toString().slice(-2)
-            changeyear(y)
+            $('.draggable').val(y);
+            y = y.toString().slice(-2);
+            changeyear(y);
         }
 
         $('.main').click(function() {
-            $('.control').toggleClass('pause')
+            $('.control').toggleClass('pause');
             if ($('.control').hasClass('pause')) {
                 progress();
                 timer = setInterval(function() {
@@ -169,7 +156,6 @@ $.getJSON('twenty.json', function(data) {
     });
 });
 
-
 //Get colour scheme for 2D Maps
 function generatePaint() {
     paint = {
@@ -181,7 +167,7 @@ function generatePaint() {
             ],
             ["rgba", 191, 191, 191, 0.1]
         ]
-    }
+    };
 
     fill = [
         'case',
@@ -194,16 +180,16 @@ function generatePaint() {
             2000, 30000
         ],
         0
-    ]
+    ];
 
-    var quan = colours.quantiles()
-    quan.unshift(0)
+    var quan = colours.quantiles();
+    quan.unshift(0);
 
     for (var i = 0; i < quan.length; i++) {
-        var tick = quan[i]
-        var colour = colours(tick)
-        paint['fill-color'][2].push(parseInt(tick))
-        paint['fill-color'][2].push(colour)
+        var tick = quan[i];
+        var colour = colours(tick);
+        paint['fill-color'][2].push(parseInt(tick));
+        paint['fill-color'][2].push(colour);
     }
 }
 
@@ -212,22 +198,22 @@ function change(value) {
     if (value != view) {
         view = value;
         if (value == "buildings") {
-            move('2d')
-            map.setLayoutProperty('buildings', 'visibility', 'visible')
-            map.setLayoutProperty('areas', 'visibility', 'none')
-            map.setLayoutProperty('msoa', 'visibility', 'none')
+            move('2d');
+            map.setLayoutProperty('buildings', 'visibility', 'visible');
+            map.setLayoutProperty('areas', 'visibility', 'none');
+            map.setLayoutProperty('msoa', 'visibility', 'none');
         }
         if (value == "areas") {
-            move('2d')
-            map.setLayoutProperty('buildings', 'visibility', 'none')
-            map.setLayoutProperty('areas', 'visibility', 'visible')
-            map.setLayoutProperty('msoa', 'visibility', 'none')
+            move('2d');
+            map.setLayoutProperty('buildings', 'visibility', 'none');
+            map.setLayoutProperty('areas', 'visibility', 'visible');
+            map.setLayoutProperty('msoa', 'visibility', 'none');
         }
         if (value == "msoa") {
-            move('3d')
-            map.setLayoutProperty('buildings', 'visibility', 'none')
-            map.setLayoutProperty('areas', 'visibility', 'none')
-            map.setLayoutProperty('msoa', 'visibility', 'visible')
+            move('3d');
+            map.setLayoutProperty('buildings', 'visibility', 'none');
+            map.setLayoutProperty('areas', 'visibility', 'none');
+            map.setLayoutProperty('msoa', 'visibility', 'visible');
         }
     }
 }
@@ -235,7 +221,7 @@ function change(value) {
 //Updates year
 function changeyear(y) {
     year = y;
-    $('.year b').text(shorttolong().toString())
+    $('.year b').text(shorttolong().toString());
     generatePaint()
 
     map.setPaintProperty(
@@ -289,7 +275,6 @@ map.addControl(
 map.addControl(new mapboxgl.NavigationControl(), 'top-left');
 
 $(document).ready(function() {
-
     $(".mode").appendTo(".mapboxgl-ctrl-top-left");
     $(".timeline").prependTo(".mapboxgl-ctrl-bottom-left");
     $(".legend").prependTo(".mapboxgl-ctrl-bottom-left");
@@ -301,5 +286,4 @@ $(document).ready(function() {
     $('.draggable').on('input', function() {
         $('.year b').text($(this).val().toString())
     });
-
 });
