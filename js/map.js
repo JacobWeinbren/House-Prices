@@ -64,6 +64,107 @@ $.getJSON('twenty.json', function(data) {
             .append($("<div class='colour'></div>").css('background-color', colour))
         )
     }
+
+    //Initial paint of maps
+    map.on('load', function() {
+
+        generatePaint()
+
+        map.addLayer({
+                "id": "buildings",
+                "type": "fill",
+                "source": {
+                    "type": "vector",
+                    "tiles": ["https://www.mapservertsr.xyz/data/intersect/{z}/{x}/{y}.pbf"],
+                },
+                "source-layer": "intersect",
+                'paint': paint
+            },
+            'waterway-label');
+
+        map.addLayer({
+                "id": "areas",
+                "type": "fill",
+                "source": {
+                    "type": "vector",
+                    "tiles": ["https://www.mapservertsr.xyz/data/oa/{z}/{x}/{y}.pbf"],
+                },
+                "source-layer": "oa",
+                'paint': paint
+            },
+            'waterway-label');
+
+        map.setPaintProperty(
+            'areas',
+            'fill-opacity',
+            0
+        );
+
+        map.addSource('hex_source', {
+            'type': 'geojson',
+            'data': 'hexes.geojson'
+        });
+
+        map.addLayer({
+                'id': 'msoa',
+                'type': 'fill-extrusion',
+                'source': 'hex_source',
+                "renderingMode": "3d",
+                'paint': {
+                    'fill-extrusion-color': paint['fill-color'],
+                    'fill-extrusion-height': fill,
+                    'fill-extrusion-base': 0,
+                    'fill-extrusion-opacity': 1
+                },
+                'layout': {
+                    'visibility': 'none'
+                }
+            },
+            'waterway-label');
+
+        map.setLight({
+            "anchor": "viewport",
+            "color": "white",
+            "intensity": 0.4
+        });
+
+        $('#mode-select').click(function() {
+            $('#mode-select').toggleClass('active');
+            $('#fill-select').removeClass('active');
+            if (view == 'msoa') {
+                change('buildings')
+            } else {
+                change('msoa')
+            }
+        });
+
+        $('#fill-select').click(function() {
+            $('#fill-select').toggleClass('active');
+            $('#mode-select').removeClass('active');
+            if (view == 'areas') {
+                change('buildings')
+            } else {
+                change('areas')
+            }
+        });
+
+        $('.main').click(function() {
+            $('.control').toggleClass('pause')
+            if ($('.control').hasClass('pause')) {
+                timer = setInterval(function() {
+                    y = parseInt(shorttolong()) + 1
+                    if (y > 2020) {
+                        y = 1995
+                    }
+                    $('.draggable').val(y)
+                    y = y.toString().slice(-2)
+                    changeyear(y)
+                }, 2000);
+            } else {
+                clearInterval(timer);
+            }
+        });
+    });
 });
 
 
@@ -102,109 +203,7 @@ function generatePaint() {
         paint['fill-color'][2].push(parseInt(tick))
         paint['fill-color'][2].push(colour)
     }
-
 }
-
-//Initial paint of maps
-map.on('load', function() {
-
-    generatePaint()
-
-    map.addLayer({
-            "id": "buildings",
-            "type": "fill",
-            "source": {
-                "type": "vector",
-                "tiles": ["https://www.mapservertsr.xyz/data/intersect/{z}/{x}/{y}.pbf"],
-            },
-            "source-layer": "intersect",
-            'paint': paint
-        },
-        'waterway-label');
-
-    map.addLayer({
-            "id": "areas",
-            "type": "fill",
-            "source": {
-                "type": "vector",
-                "tiles": ["https://www.mapservertsr.xyz/data/oa/{z}/{x}/{y}.pbf"],
-            },
-            "source-layer": "oa",
-            'paint': paint
-        },
-        'waterway-label');
-
-    map.setPaintProperty(
-        'areas',
-        'fill-opacity',
-        0
-    );
-
-    map.addSource('hex_source', {
-        'type': 'geojson',
-        'data': 'hexes.geojson'
-    });
-
-    map.addLayer({
-            'id': 'msoa',
-            'type': 'fill-extrusion',
-            'source': 'hex_source',
-            "renderingMode": "3d",
-            'paint': {
-                'fill-extrusion-color': paint['fill-color'],
-                'fill-extrusion-height': fill,
-                'fill-extrusion-base': 0,
-                'fill-extrusion-opacity': 1
-            },
-            'layout': {
-                'visibility': 'none'
-            }
-        },
-        'waterway-label');
-
-    map.setLight({
-        "anchor": "viewport",
-        "color": "white",
-        "intensity": 0.4
-    });
-
-    $('#mode-select').click(function() {
-        $('#mode-select').toggleClass('active');
-        $('#fill-select').removeClass('active');
-        if (view == 'msoa') {
-            change('buildings')
-        } else {
-            change('msoa')
-        }
-    });
-
-    $('#fill-select').click(function() {
-        $('#fill-select').toggleClass('active');
-        $('#mode-select').removeClass('active');
-        if (view == 'areas') {
-            change('buildings')
-        } else {
-            change('areas')
-        }
-    });
-
-    $('.main').click(function() {
-        $('.control').toggleClass('pause')
-        if ($('.control').hasClass('pause')) {
-            timer = setInterval(function() {
-                y = parseInt(shorttolong()) + 1
-                if (y > 2020) {
-                    y = 1995
-                }
-                $('.draggable').val(y)
-                y = y.toString().slice(-2)
-                changeyear(y)
-            }, 2000);
-        } else {
-            clearInterval(timer);
-        }
-    });
-});
 
 //Perspective change
 function change(value) {
@@ -213,24 +212,14 @@ function change(value) {
         if (value == "buildings") {
             move('2d')
             map.setLayoutProperty('buildings', 'visibility', 'visible')
-            map.setLayoutProperty('areas', 'visibility', 'visible')
+            map.setLayoutProperty('areas', 'visibility', 'none')
             map.setLayoutProperty('msoa', 'visibility', 'none')
-            map.setPaintProperty(
-                'areas',
-                'fill-opacity',
-                0
-            );
         }
         if (value == "areas") {
             move('2d')
             map.setLayoutProperty('buildings', 'visibility', 'none')
             map.setLayoutProperty('areas', 'visibility', 'visible')
             map.setLayoutProperty('msoa', 'visibility', 'none')
-            map.setPaintProperty(
-                'areas',
-                'fill-opacity',
-                1
-            );
         }
         if (value == "msoa") {
             move('3d')
